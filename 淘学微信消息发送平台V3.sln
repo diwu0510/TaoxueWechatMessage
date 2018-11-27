@@ -3,9 +3,62 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.106
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HZC.Core", "HZC.Core\HZC.Core.csproj", "{744A4649-0762-425C-8311-798CC7BF3EE8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.基础设施层", "1.基础设施层", "{6E7D7E19-8C4E-4791-83EE-BEACE085649A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2.数据层", "2.数据层", "{1AB3578C-550F-4189-AE34-FBCACE1A9A06}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3.工具层", "3.工具层", "{E2058824-EFEA-409B-9AAD-EBC7E3202281}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.服务层", "4.服务层", "{53C813D2-162F-40C8-9F7C-3AA0626ECE49}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5.应用层", "5.应用层", "{55EF0309-AC62-4BE2-9889-B974620A1478}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HZC.Database", "HZC.Database\HZC.Database.csproj", "{509D5FC9-B18E-495B-AD64-DF7CFEE7A618}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HZC.Utils", "HZC.Utils\HZC.Utils.csproj", "{3E0E47F5-CF22-46A9-812B-0DAFDA9AB060}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taoxue.Mp.Sms.Services", "Taoxue.Mp.Sms.Services\Taoxue.Mp.Sms.Services.csproj", "{FAEA1356-1589-42BB-A9F3-115E28C47249}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taoxue.Mp.Sms.Abstract", "Taoxue.Mp.Sms.Abstract\Taoxue.Mp.Sms.Abstract.csproj", "{E37CBB32-064E-435D-AF67-5ACBCC3C0E17}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{744A4649-0762-425C-8311-798CC7BF3EE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{744A4649-0762-425C-8311-798CC7BF3EE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{744A4649-0762-425C-8311-798CC7BF3EE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{744A4649-0762-425C-8311-798CC7BF3EE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{509D5FC9-B18E-495B-AD64-DF7CFEE7A618}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{509D5FC9-B18E-495B-AD64-DF7CFEE7A618}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{509D5FC9-B18E-495B-AD64-DF7CFEE7A618}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{509D5FC9-B18E-495B-AD64-DF7CFEE7A618}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E0E47F5-CF22-46A9-812B-0DAFDA9AB060}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E0E47F5-CF22-46A9-812B-0DAFDA9AB060}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E0E47F5-CF22-46A9-812B-0DAFDA9AB060}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E0E47F5-CF22-46A9-812B-0DAFDA9AB060}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAEA1356-1589-42BB-A9F3-115E28C47249}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAEA1356-1589-42BB-A9F3-115E28C47249}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAEA1356-1589-42BB-A9F3-115E28C47249}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAEA1356-1589-42BB-A9F3-115E28C47249}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E37CBB32-064E-435D-AF67-5ACBCC3C0E17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E37CBB32-064E-435D-AF67-5ACBCC3C0E17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E37CBB32-064E-435D-AF67-5ACBCC3C0E17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E37CBB32-064E-435D-AF67-5ACBCC3C0E17}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{744A4649-0762-425C-8311-798CC7BF3EE8} = {6E7D7E19-8C4E-4791-83EE-BEACE085649A}
+		{509D5FC9-B18E-495B-AD64-DF7CFEE7A618} = {1AB3578C-550F-4189-AE34-FBCACE1A9A06}
+		{3E0E47F5-CF22-46A9-812B-0DAFDA9AB060} = {E2058824-EFEA-409B-9AAD-EBC7E3202281}
+		{FAEA1356-1589-42BB-A9F3-115E28C47249} = {53C813D2-162F-40C8-9F7C-3AA0626ECE49}
+		{E37CBB32-064E-435D-AF67-5ACBCC3C0E17} = {53C813D2-162F-40C8-9F7C-3AA0626ECE49}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BAE3BAB8-BD3D-48B7-966F-D2ECC8B0745A}
