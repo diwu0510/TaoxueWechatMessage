@@ -22,17 +22,15 @@ namespace HZC.Database
         }
 
         #region 构造函数
-        public MyDbUtil(string sectionName)
+        public MyDbUtil(string sectionName = "")
         {
             if (_configuration == null)
             {
                 throw new Exception("数据库工具未初始化，要在Startup.cs中调用MyDbUtil.Init(Configuration);进行注册");
             }
+            sectionName = string.IsNullOrWhiteSpace(sectionName) ? "DefaultConnectionString" : sectionName.Trim();
             _connectionString = _configuration.GetConnectionString(sectionName);
         }
-
-        public MyDbUtil() : this("DefaultConnectionString")
-        { }
         #endregion
 
         #region 获取数据库连接

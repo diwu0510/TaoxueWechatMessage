@@ -10,9 +10,6 @@ namespace HZC.Database
     /// </summary>
     public class BaseEntity : BaseEntity<int>
     {
-        [MyDataField(UpdateIgnore = true)]
-        public bool IsDel { get; set; }
-
         //[Timestamp]
         //public byte[] Version { get; set; }
 

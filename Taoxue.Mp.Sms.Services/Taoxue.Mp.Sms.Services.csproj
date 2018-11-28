@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HZC.Database\HZC.Database.csproj" />
+    <ProjectReference Include="..\HZC.Utils\HZC.Utils.csproj" />
   </ItemGroup>
 
 </Project>

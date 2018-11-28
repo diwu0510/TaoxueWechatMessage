@@ -7,8 +7,10 @@ namespace Taoxue.Mp.Sms.Services
     /// 原始消息（待发送消息）
     /// </summary>
     [MyDataTable("Message_OMessage")]
-    public class OMessageEntity : BaseEntity
+    public class OMessageEntity
     {
+        public int Id { get; set; }
+
         /// <summary>
         /// 目标类型，1 Mobile，2 OpenId
         /// </summary>
@@ -45,13 +47,23 @@ namespace Taoxue.Mp.Sms.Services
         public DateTime SendAt { get; set; }
 
         /// <summary>
-        /// 处理结果
+        /// 处理结果编码
         /// </summary>
-        public string Result { get; set; }
+        public int ResultCode { get; set; }
+
+        /// <summary>
+        /// 处理结果说明
+        /// </summary>
+        public string ResultMessage { get; set; }
 
         /// <summary>
         /// 处理完成时间
         /// </summary>
         public DateTime FinishAt { get; set; }
+
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime CreateAt { get; set; }
     }
 }
