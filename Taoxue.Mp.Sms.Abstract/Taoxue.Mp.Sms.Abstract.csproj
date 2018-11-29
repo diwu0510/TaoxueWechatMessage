@@ -5,7 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Apis\" />
+    <Compile Remove="Apis\**" />
+    <EmbeddedResource Remove="Apis\**" />
+    <None Remove="Apis\**" />
   </ItemGroup>
 
 </Project>

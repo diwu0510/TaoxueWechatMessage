@@ -40,37 +40,27 @@ namespace Taoxue.Mp.Sms.Services
                 Remark = ""
             };
 
+            List<string> _errors = new List<string>();
+
             // 先简单的验证下参数
             if (entity.Content == null || entity.Content.Length == 0)
             {
-                log.IsOk = false;
-                log.Message = "消息内容不能为空";
-                db.Create<ApiLogEntity>(log);
-                return ResultUtil.AuthFail("消息内容不能为空");
+                _errors.Add("消息内容不能为空");
             }
 
             if (entity.PlatId <= 0)
             {
-                log.IsOk = false;
-                log.Message = "不合法的PlatId";
-                db.Create<ApiLogEntity>(log);
-                return ResultUtil.AuthFail("不合法的PlatId");
+                _errors.Add("PlatId必须大于0");
             }
 
             if (entity.TemplateId <= 0)
             {
-                log.IsOk = false;
-                log.Message = "不合法的TemplateId";
-                db.Create<ApiLogEntity>(log);
-                return ResultUtil.AuthFail("不合法的TemplateId");
+                _errors.Add("TemplateId必须大于0");
             }
 
             if (entity.SendAt == null || entity.SendAt < DateTime.Today)
             {
-                log.IsOk = false;
-                log.Message = "消息发送时间不得小于当天日期";
-                db.Create<ApiLogEntity>(log);
-                return ResultUtil.AuthFail("消息发送时间不得小于当天日期");
+                _errors.Add("消息发送时间不得小于当天日期");
             }
 
             // 验证链接地址
@@ -78,22 +68,49 @@ namespace Taoxue.Mp.Sms.Services
             {
                 if (!StringValidateUtil.IsUrl(entity.Url))
                 {
-                    log.IsOk = false;
-                    log.Message = "无效的链接地址";
-                    db.Create<ApiLogEntity>(log);
-                    return ResultUtil.AuthFail("无效的链接地址");
+                    _errors.Add("Url格式错误");
                 }
             }
 
-            // 验证类型和目标
+            // 验证类型
             if (entity.Type != 1 && entity.Type != 2)
             {
-                log.IsOk = false;
-                log.Message = "不受支持的消息类型，目前仅支持 1手机号码 | 2微信OpenId";
-                db.Create<ApiLogEntity>(log);
-                return ResultUtil.AuthFail("不受支持的消息类型，目前仅支持 1手机号码 | 2微信OpenId");
+                _errors.Add("Type仅支持 1 Mobile | 2 OpenId");
             }
 
+            if (_errors.Count > 0)
+            {
+                log.IsOk = false;
+                log.Message = string.Join(";", _errors);
+                log.Remark = "";
+
+                db.Create<ApiLogEntity>(log);
+                return ResultUtil.AuthFail(log.Message);
+            }
+
+            // 验证来源
+            var plat = PlatUtil.Get(entity.PlatId);
+            if (plat == null || !plat.Enabled)
+            {
+                log.IsOk = false;
+                log.Message = "平台不存在或已禁用";
+                db.Create<ApiLogEntity>(log);
+
+                return ResultUtil.AuthFail("平台不存在或已禁用");
+            }
+
+            // 验证模板
+            var temp = MessageTemplateUtil.Get(entity.TemplateId);
+            if (temp == null || !temp.Enabled)
+            {
+                log.IsOk = false;
+                log.Message = "模板不存在或已禁用";
+                db.Create<ApiLogEntity>(log);
+
+                return ResultUtil.AuthFail("模板不存在或已禁用");
+            }
+
+            // 清洗手机号码或OpenId
             List<string> _targets = new List<string>();
 
             if (entity.Type == 1)
@@ -126,35 +143,16 @@ namespace Taoxue.Mp.Sms.Services
                 return ResultUtil.AuthFail("未包含有效发送对象");
             }
 
-            if (_targets.Count > 50)
+            // 验证发送数量
+            if (_targets.Count > 1000)
             {
                 log.IsOk = false;
                 log.Message = "每次推送必须小于等于50条";
                 db.Create<ApiLogEntity>(log);
                 return ResultUtil.AuthFail("每次推送必须小于等于50条");
             }
-
-            // 验证来源
-            var plat = PlatUtil.Get(entity.PlatId);
-            if (plat == null || !plat.Enabled)
-            {
-                log.IsOk = false;
-                log.Message = "平台不存在或已禁用";
-                db.Create<ApiLogEntity>(log);
-                return ResultUtil.AuthFail("平台不存在或已禁用");
-            }
-
-            // 验证模板
-            var temp = MessageTemplateUtil.Get(entity.TemplateId);
-            if (temp == null || !temp.Enabled)
-            {
-                log.IsOk = false;
-                log.Message = "模板不存在或已禁用";
-                db.Create<ApiLogEntity>(log);
-                return ResultUtil.AuthFail("模板不存在或已禁用");
-            }
-
-            // 流程：写入到OMessage表，发布到cap
+            
+            // 写接口请求日志，添加到队列
             using (var conn = db.GetConnection())
             {
                 conn.Open();
@@ -178,7 +176,7 @@ namespace Taoxue.Mp.Sms.Services
         }
 
         /// <summary>
-        /// 消息
+        /// 把请求转换成原始消息
         /// </summary>
         /// <param name="dto"></param>
         public void OMessageCreate(OMessageCreateDto entity)
@@ -225,6 +223,10 @@ namespace Taoxue.Mp.Sms.Services
             }
         }
         
+        /// <summary>
+        /// 原始消息转换为通知消息
+        /// </summary>
+        /// <param name="dto"></param>
         public void OMessageOperate(OMessageQueueDto dto)
         {
 

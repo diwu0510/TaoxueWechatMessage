@@ -12,6 +12,11 @@
     <ProjectReference Include="..\HZC.Core\HZC.Core.csproj" />
     <ProjectReference Include="..\HZC.Database\HZC.Database.csproj" />
     <ProjectReference Include="..\HZC.Utils\HZC.Utils.csproj" />
+    <ProjectReference Include="..\Taoxue.Mp.Sms.Abstract\Taoxue.Mp.Sms.Abstract.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="WxNotice\" />
   </ItemGroup>
 
 </Project>
