@@ -20,14 +20,14 @@ namespace Taoxue.Mp.Sms.Services
         public string IP { get; set; }
 
         /// <summary>
-        /// 平台ID
+        /// 消息分组标识
         /// </summary>
-        public string PlatId { get; set; }
+        public string Group { get; set; }
 
         /// <summary>
-        /// 平台名称
+        /// 平台ID
         /// </summary>
-        public string PlatName { get; set; }
+        public int PlatId { get; set; }
 
         /// <summary>
         /// 请求方式，GET|POST
@@ -37,7 +37,7 @@ namespace Taoxue.Mp.Sms.Services
         /// <summary>
         /// 请求参数，Json
         /// </summary>
-        public string Parameters { get; set; }
+        public string Content { get; set; }
 
         /// <summary>
         /// 是否请求成功
@@ -48,6 +48,11 @@ namespace Taoxue.Mp.Sms.Services
         /// 若请求失败，记录失败原因
         /// </summary>
         public string Message { get; set; }
+
+        /// <summary>
+        /// 说明
+        /// </summary>
+        public string Remark { get; set; }
 
         /// <summary>
         /// 请求时间

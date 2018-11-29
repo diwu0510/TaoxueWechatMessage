@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DotNetCore.CAP" Version="2.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HZC.Core\HZC.Core.csproj" />
     <ProjectReference Include="..\HZC.Database\HZC.Database.csproj" />
     <ProjectReference Include="..\HZC.Utils\HZC.Utils.csproj" />
   </ItemGroup>

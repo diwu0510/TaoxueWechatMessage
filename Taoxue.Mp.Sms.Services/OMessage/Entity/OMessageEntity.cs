@@ -24,7 +24,7 @@ namespace Taoxue.Mp.Sms.Services
         /// <summary>
         /// 第三方平台ID
         /// </summary>
-        public int PlateId { get; set; }
+        public int PlatId { get; set; }
 
         /// <summary>
         /// 模板ID
@@ -40,6 +40,11 @@ namespace Taoxue.Mp.Sms.Services
         /// 消息链接地址
         /// </summary>
         public string Url { get; set; }
+
+        /// <summary>
+        /// 第三方平台上的消息分组标识
+        /// </summary>
+        public string Group { get; set; }
 
         /// <summary>
         /// 发送时间
@@ -59,7 +64,7 @@ namespace Taoxue.Mp.Sms.Services
         /// <summary>
         /// 处理完成时间
         /// </summary>
-        public DateTime FinishAt { get; set; }
+        public DateTime? FinishAt { get; set; }
 
         /// <summary>
         /// 创建时间
