@@ -60,20 +60,7 @@ namespace Taoxue.Mp.Sms.Services
             if (model.Type == 1)
             {
                 // 手机消息处理
-                var entity = new WxMobileNoticeEntity
-                {
-                    Content = JsonConvert.SerializeObject(model.Content),
-                    PlatId = model.PlatId,
-                    PlatName = plat.Name,
-                    TemplateId = temp.TemplateId,
-                    Url = model.Url,
-                    Tag = model.Tag,
-                    Remark = "",
-                    CreateAt = DateTime.Now,
-                    ResultCode = (int)WxMobileNoticeResultCode.Waiting,
-                    ResultMessage = WxMobileNoticeResultCode.Waiting.GetDescription(),
-                    Mobile = model.UserIdentity
-                };
+                var entity = WxNoticeRequest2MobileNotice(model, plat.Name, temp.TemplateId);
 
                 using (var conn = db.GetConnection())
                 {
@@ -84,23 +71,17 @@ namespace Taoxue.Mp.Sms.Services
                         {
                             var id = db.Create<WxMobileNoticeEntity>(entity);
 
-                            _publisher.Publish("Taoxue.Sms.MobileNotice.Create", new WxMobileNoticeQueueDto
-                            {
-                                Id = id,
-                                Mobile = model.UserIdentity,
-                                Content = model.Content,
-                                PlatId = model.PlatId,
-                                Tag = model.Tag,
-                                TemplateId = temp.TemplateId,
-                                Url = model.Url
-                            });
-                            
+                            _publisher.Publish("Taoxue.Sms.MobileNotice.Create", WxMobileNotice2QueueDto(id, temp.TemplateId, model));
+
                             trans.Commit();
+                            return ResultUtil.Success();
                         }
                         catch (Exception ex)
                         {
                             trans.Rollback();
                             conn.Close();
+                            return ResultUtil.Exception(ex);
+                            throw ex;
                         }
                     }
                 }
@@ -108,8 +89,105 @@ namespace Taoxue.Mp.Sms.Services
             else if (model.Type == 2)
             {
                 // OpenId消息处理
+                var entity = WxNoticeRequest2Notice(model, plat.Name, temp.TemplateId);
+
+                using (var conn = db.GetConnection())
+                {
+                    conn.Open();
+                    using (var trans = conn.BeginTransaction())
+                    {
+                        try
+                        {
+                            var id = db.Create<WxNoticeEntity>(entity);
+
+                            _publisher.Publish("Taoxue.Sms.Notice.Create", WxNotice2QueueDto(id, temp.TemplateId, model));
+
+                            trans.Commit();
+                            return ResultUtil.Success();
+                        }
+                        catch (Exception ex)
+                        {
+                            trans.Rollback();
+                            conn.Close();
+                            return ResultUtil.Exception(ex);
+                            throw ex;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                return ResultUtil.Fail("未知消息类型");
             }
         }
+
+        #region 私有方法-转换各种Dto
+        private WxMobileNoticeEntity WxNoticeRequest2MobileNotice(WxNoticeApiRequestModel model, string platName, string templateId)
+        {
+            var entity = new WxMobileNoticeEntity
+            {
+                Content = JsonConvert.SerializeObject(model.Content),
+                PlatId = model.PlatId,
+                PlatName = platName,
+                TemplateId = templateId,
+                Url = model.Url,
+                Tag = model.Tag,
+                Remark = "",
+                CreateAt = DateTime.Now,
+                ResultCode = (int)WxMobileNoticeResultCode.Waiting,
+                ResultMessage = WxMobileNoticeResultCode.Waiting.GetDescription(),
+                Mobile = model.UserIdentity
+            };
+            return entity;
+        }
+
+        private WxNoticeEntity WxNoticeRequest2Notice(WxNoticeApiRequestModel model, string platName, string templateId)
+        {
+            var entity = new WxNoticeEntity
+            {
+                Content = JsonConvert.SerializeObject(model.Content),
+                PlatId = model.PlatId,
+                PlatName = platName,
+                TemplateId = templateId,
+                Url = model.Url,
+                Tag = model.Tag,
+                Remark = "",
+                CreateAt = DateTime.Now,
+                ResultCode = (int)WxMobileNoticeResultCode.Waiting,
+                ResultMessage = WxMobileNoticeResultCode.Waiting.GetDescription(),
+                OpenId = model.UserIdentity
+            };
+            return entity;
+        }
+
+        private WxMobileNoticeQueueDto WxMobileNotice2QueueDto(int id, string templateId, WxNoticeApiRequestModel model)
+        {
+            return new WxMobileNoticeQueueDto
+            {
+                Id = id,
+                Mobile = model.UserIdentity,
+                Content = model.Content,
+                PlatId = model.PlatId,
+                Tag = model.Tag,
+                TemplateId = templateId,
+                Url = model.Url
+            };
+        }
+
+        private WxNoticeQueueDto WxNotice2QueueDto(int id, string templateId, WxNoticeApiRequestModel model)
+        {
+            return new WxNoticeQueueDto
+            {
+                Id = id,
+                OpenId = model.UserIdentity,
+                Content = model.Content,
+                PlatId = model.PlatId,
+                Tag = model.Tag,
+                TemplateId = templateId,
+                Url = model.Url
+            };
+        } 
+        #endregion
     }
     
     public class WxNoticeBaseEntity
@@ -211,11 +289,9 @@ namespace Taoxue.Mp.Sms.Services
         public DateTime? WxResponseAt { get; set; }
     }
 
-    public class WxMobileNoticeQueueDto
+    public class WxNoticeQueueBaseDto
     {
         public int Id { get; set; }
-
-        public string Mobile { get; set; }
 
         public string[] Content { get; set; }
 
@@ -226,5 +302,16 @@ namespace Taoxue.Mp.Sms.Services
         public string TemplateId { get; set; }
 
         public string Url { get; set; }
+    }
+
+
+    public class WxMobileNoticeQueueDto: WxNoticeQueueBaseDto
+    {
+        public string Mobile { get; set; }
+    }
+
+    public class WxNoticeQueueDto :WxNoticeQueueBaseDto
+    {
+        public string OpenId { get; set; }
     }
 }

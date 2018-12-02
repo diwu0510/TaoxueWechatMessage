@@ -1,0 +1,30 @@
+﻿
+@{
+    ViewData["Title"] = "Send";
+}
+
+<h2>Send</h2>
+
+<div>
+    <input type="text" id="client" value="" />
+    <input type="text" id="client2" value="" />
+    <input type="button" id="btn" value="开始" class="btn btn-success" />
+</div>
+
+@section scripts
+{
+    <script>
+        $('#btn').on('click', function () {
+            for (var i = 0; i < 100; i++) {
+                $.post('/Home/Send', { id: i, client: $('#client').val() }, function (response) {
+                    console.log(response);
+                })
+            }
+            for (var j = 200; j < 300; j++) {
+                $.post('/Home/Send', { id: j, client: $('#client2').val() }, function (response) {
+                    console.log(response);
+                })
+            }
+        });
+    </script>
+}
